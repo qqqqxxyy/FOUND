@@ -221,7 +221,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--log-dir",
         type=str,
-        default="outputs",
+        default="../outputs",
         help="Logging and output directory."
     )
     parser.add_argument(

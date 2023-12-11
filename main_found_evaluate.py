@@ -58,7 +58,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--model-weights",
         type=str,
-        default="data/weights/decoder_weights.pt",
+        default="../data/weights/decoder_weights.pt",
     )
     parser.add_argument(
         "--dataset-dir",
