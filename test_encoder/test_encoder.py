@@ -3,10 +3,11 @@ import sys
 import ipdb
 sys.path.append('..')
 from utils.config_loader import Params,load_base_path,read_yaml
-from utils.datasets import ObjLocDataset
+from utils.datasets import ObjLocDataset,Trans,TransBbox
 from utils.logger import Info_Record
 import argparse
-
+from torchvision import transforms
+from tqdm import tqdm
 class TestParam(Params):
     def __init__(self):
         super(TestParam, self).__init__()
@@ -44,21 +45,23 @@ class TestParam(Params):
         self.type= 'saliency'
         self.datasets= ['DUTS-TEST', 'DUTS-TEST']
         self.freq= 50
+        self.n_steps = 500
         #base path
         base_conf=load_base_path()
         self.root_path = base_conf['root_path']
         self.dataset_path = base_conf['dataset_path']
-        
+        #data path
+        self.val_property_dir = ''
         #load hyperparameters from flexible conf
         parser = argparse.ArgumentParser(description='Test Parameters')
-        parser.add_argument('-cfgp','--flexible_conf_path', type=str, default=None)
-        parser.add_argument('-cfgc','--flexible_conf_branch', type=str, default=None)
+        parser.add_argument('-fcp','--flexible_conf_path', type=str, default=None)
+        parser.add_argument('-fcb','--flexible_conf_branch', type=str, default=None)
         args = parser.parse_args()
         flexible_conf = read_yaml(args.flexible_conf_path,args.flexible_conf_branch)
         self._flash_conf(flexible_conf)
         
         #补全model_weight,val_property_dir路径
-        self.model_weight=os.path.join(self.root_path,'weight',self.model_weight)
+        # self.model_weight=os.path.join(self.root_path,'weight',self.model_weight)
         self.val_property_dir=os.path.join(self.dataset_path,self.dataset,'data_annotation',self.val_property_dir)
         #连接数据路径
         self.mask_root_dir=self._complete_formed_paths(self.dataset_path,'mask_root_dir')
@@ -70,7 +73,14 @@ class TestParam(Params):
 def main():
     param = TestParam()
     # print(param.__dict__)
+    target_ds = ObjLocDataset(param.val_root_dir,param.val_property_dir,
+                tsfm=transforms.Compose([transforms.Resize((128,128)),
+                transforms.ToTensor(), Trans(['Normalize','standard']) ]),
+                tsfm_bbox=transforms.Compose([ TransBbox(['Resize',(128,128)]) ]))
     
+    for t in tqdm(range(param.n_steps)):
+        _, image,clas,bbox,size = target_ds[t]
+        ipdb.set_trace()
 
 
 

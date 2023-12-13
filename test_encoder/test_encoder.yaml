@@ -5,7 +5,9 @@ default:
   datasets: [DUTS-TEST, DUTS-TEST]
   freq: 50
   n_steps: 500
-
+  #data path:
+  val_property_dir : test_list.json
+  
   #model:
   arch: vit_small
   patch_size: 8
