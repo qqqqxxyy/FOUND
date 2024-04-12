@@ -23,7 +23,7 @@ import json
 import torchvision
 import numpy as np
 import skimage.io
-
+import ipdb
 from PIL import Image
 from tqdm import tqdm
 from torchvision import transforms as pth_transforms
@@ -77,7 +77,7 @@ class UODDataset:
         self.root_dir = root_dir
 
         if dataset_name == "VOC07":
-            self.root_path = f"{root_dir}/VOC2007"
+            self.root_path = root_dir
             self.year = "2007"
         elif dataset_name == "VOC12":
             self.root_path = f"{root_dir}/VOC2012"
@@ -95,10 +95,11 @@ class UODDataset:
             raise ValueError("Unknown dataset.")
 
         if not os.path.exists(self.root_path):
+            print(self.root_path)
             raise ValueError("Please follow the README to setup the datasets.")
 
         self.name = f"{self.dataset_name}_{self.set}"
-
+        print(self.root_path)
         # Build the dataloader
         if "VOC" in dataset_name:
             self.dataloader = torchvision.datasets.VOCDetection(

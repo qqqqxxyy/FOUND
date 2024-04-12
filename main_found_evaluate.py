@@ -18,7 +18,7 @@ from misc import load_config
 from datasets.datasets import build_dataset
 from evaluation.saliency import evaluate_saliency
 from evaluation.uod import evaluation_unsupervised_object_discovery
-
+import ipdb
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description = 'Evaluation of FOUND',
@@ -84,6 +84,8 @@ if __name__ == "__main__":
                         bkg_th=config.found["bkg_th"])
     # Load weights
     model.decoder_load_weights(args.model_weights)
+    print(args.model_weights)
+    ipdb.set_trace()
     model.eval()
     print(f"Model {args.model_weights} loaded correctly.")
 
